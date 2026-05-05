@@ -51,24 +51,33 @@
 </ul>
         </nav>
     </header>
+<div id="filterModal" class="filter-modal">
+    <div class="filter-content">
+        <h3 class="modal-title"><i class="fas fa-tags"></i> Chọn Thể Loại</h3>
+        
+        <form action="{{ route('search') }}" method="GET">
+            <div class="filter-grid">
+                @if(isset($categories) && $categories->count() > 0)
+                    @foreach($categories as $cat)
+                        <label class="filter-item">
+                            <input type="checkbox" name="genres[]" value="{{ $cat->id }}" 
+                                {{ is_array(request('genres')) && in_array($cat->id, request('genres')) ? 'checked' : '' }}> 
+                           <span>{{ $cat->name }}</span>
+                        </label>
+                    @endforeach
+                @else
+                    <p>Chưa có thể loại nào trong database.</p>
+                @endif
+            </div>
 
-    <div id="filterModal" class="filter-modal">
-        <div class="filter-content">
-            <h3 class="modal-title"><i class="fas fa-tags"></i> Chọn Thể Loại</h3>
-            <form action="{{ route('search') }}" method="GET">
-                <div class="filter-grid">
-                    <label class="filter-item"><input type="checkbox" name="genres[]" value="Hành Động"> <span>Hành Động</span></label>
-                    <label class="filter-item"><input type="checkbox" name="genres[]" value="Hài Hước"> <span>Hài Hước</span></label>
-                    <label class="filter-item"><input type="checkbox" name="genres[]" value="Kinh Dị"> <span>Kinh Dị</span></label>
-                    <label class="filter-item"><input type="checkbox" name="genres[]" value="Phiêu Lưu"> <span>Phiêu Lưu</span></label>
-                </div>
-                <div class="filter-footer">
-                    <button type="button" class="btn-close-filter" onclick="closeFilter()">Đóng</button>
-                    <button type="submit" class="btn-submit-filter">Lọc Truyện</button>
-                </div>
-            </form>
-        </div>
+            <div class="filter-footer">
+                <button type="button" class="btn-close-filter" onclick="closeFilter()">Đóng</button>
+                <button type="submit" class="btn-submit-filter">Lọc Truyện</button>
+            </div>
+        </form>
     </div>
+</div>
+
 
     <section class="hero-banner">
         <div class="banner-overlay"></div> 

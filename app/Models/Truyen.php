@@ -20,4 +20,9 @@ class Truyen extends Model {
     public function scopeConHang($query) {
         return $query->where('SoLuongTon', '>', 0);
     }
+    public function category()
+{
+    // Liên kết: Một cuốn truyện thuộc về một thể loại
+    return $this->belongsTo(Category::class, 'MaTheLoai', 'id');
+}
 }

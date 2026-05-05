@@ -7,22 +7,25 @@ use App\Models\Truyen;
 
 class GioHangController extends Controller
 {
-    /**
-     * 1. Hàm hiển thị TRANG CHỦ (Trang danh sách truyện)
+/**
+     * 1. Hàm hiển thị TRANG CHỦ
      */
     public function index(Request $request)
     {
         $query = $request->input('query');
+        $storiesQuery = \App\Models\Truyen::query();
 
         if ($query) {
-            $stories = Truyen::where('TenTruyen', 'LIKE', "%{$query}%")->get();
-        } else {
-            $stories = Truyen::all();
+            $storiesQuery->where('TenTruyen', 'LIKE', "%{$query}%");
         }
 
-        return view('welcome', compact('stories'));
-    }
+        $stories = $storiesQuery->get();
+        
+        // Lấy danh sách thể loại truyền sang để Modal không bị lỗi trống
+        $categories = \DB::table('categories')->get();
 
+        return view('welcome', compact('stories', 'categories'));
+    }
     /**
      * 2. Hàm xử lý khi nhấn nút "Thêm vào giỏ"
      */
@@ -54,18 +57,31 @@ class GioHangController extends Controller
                          ->with('added_to_cart', 'Đã thêm vào giỏ hàng thành công!');
     }
 
-    /**
-     * 3. Hàm xử lý TÌM KIẾM (Cho route /search)
+/**
+     * 3. Hàm xử lý TÌM KIẾM VÀ LỌC (Cho route /search)
      */
     public function search(Request $request)
-    {
-        $query = $request->input('query');
-        $stories = Truyen::where('TenTruyen', 'LIKE', "%{$query}%")->get();
+{
+    $genres = $request->input('genres'); // Nhận danh sách ID thể loại [1]
+    $queryText = $request->input('query');
+    
+    $query = \App\Models\Truyen::query();
 
-        return view('welcome', compact('stories'));
+    // Lọc theo cột category_id bạn vừa thêm vào Database
+    if (!empty($genres)) {
+        $query->whereIn('category_id', $genres);
     }
 
-    /**
+    if (!empty($queryText)) {
+        $query->where('TenTruyen', 'LIKE', "%{$queryText}%");
+    }
+
+    $stories = $query->get();
+    $categories = \DB::table('categories')->get();
+
+    return view('welcome', compact('stories', 'categories'));
+}
+ /**
      * 4. Hàm hiển thị trang GIỎ HÀNG
      */
     public function xemGioHang()
@@ -128,17 +144,16 @@ class GioHangController extends Controller
     /**
      * 8. Lọc theo thể loại
      */
-    public function theLoai($slug)
-    {
-        $category = \DB::table('categories')->where('name', $slug)->first();
+   public function theLoai($id)
+{
+    // 1. Lấy ra thể loại đang chọn
+    $category = \DB::table('categories')->where('id', $id)->first();
 
-        if ($category) {
-            // Đã sửa Story thành Truyen ở đây để không bị lỗi
-            $stories = \App\Models\Truyen::where('category_id', $category->id)->get();
-        } else {
-            $stories = collect(); 
-        }
+    // 2. Lấy danh sách truyện thuộc thể loại đó
+    // Lưu ý: Tên cột 'MaTheLoai' phải khớp với DB của bạn nhé
+    $stories = \App\Models\Truyen::where('MaTheLoai', $id)->get();
 
-        return view('welcome', compact('stories', 'slug'));
-    }
+    // 3. Trả về lại trang chủ nhưng chỉ có truyện của thể loại này
+    return view('welcome', compact('stories', 'category'));
+}
 }

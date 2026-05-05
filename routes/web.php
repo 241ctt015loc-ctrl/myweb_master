@@ -64,3 +64,5 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+// Route lọc truyện theo thể loại
+Route::get('/the-loai/{id}', [App\Http\Controllers\GioHangController::class, 'theLoai'])->name('category.show');
