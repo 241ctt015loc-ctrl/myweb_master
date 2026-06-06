@@ -14,9 +14,11 @@ return new class extends Migration
     Schema::create('users', function (Blueprint $table) {
         $table->id();
         $table->string('name');         // Thêm cột tên
-        $table->string('email')->unique(); // Thêm cột email
-        $table->string('password');      // Thêm cột mật khẩu
+        $table->string('email')->unique();
+        $table->string('password');
+        $table->string('role')->default('customer'); 
         $table->timestamps();
+// ... code cũ
     });
 }
 

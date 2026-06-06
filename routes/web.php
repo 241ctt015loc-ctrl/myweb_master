@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\GioHangController; // Code của bạn
-use App\Http\Controllers\AuthController;    // Code của bạn bạn
+use App\Http\Controllers\GioHangController; 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TruyenAdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,19 +12,14 @@ use App\Http\Controllers\ProfileController;
 */
 
 // ==========================================
-// PHẦN 1: TÍNH NĂNG CHÍNH (DO BẠN VIẾT)
+// PHẦN 1: TÍNH NĂNG CHÍNH (AI CŨNG XEM ĐƯỢC)
 // ==========================================
-
-// 1. TRANG CHỦ (Hiển thị danh sách truyện)
 Route::get('/', [GioHangController::class, 'index'])->name('home');
-
-// 2. TÌM KIẾM TRUYỆN
 Route::get('/search', [GioHangController::class, 'search'])->name('search');
-
-// 3. XEM CHI TIẾT TRUYỆN (Trang chọn tập/chap)
 Route::get('/truyen/{id}', [GioHangController::class, 'show'])->name('story.show');
+Route::get('/the-loai/{id}', [GioHangController::class, 'theLoai'])->name('category.show');
 
-// 4. GIỎ HÀNG
+// GIỎ HÀNG (Chưa đăng nhập vẫn xem được giỏ hàng)
 Route::get('/gio-hang', [GioHangController::class, 'xemGioHang'])->name('cart.index');
 Route::post('/mua-hang/{id}', [GioHangController::class, 'themVaoGio'])->name('cart.add');
 Route::get('/xoa-khoi-gio/{id}', [GioHangController::class, 'xoaKhoiGio'])->name('cart.remove');
@@ -33,36 +28,61 @@ Route::get('/reset-gio-hang', function() {
     return redirect()->route('home')->with('swal_success', 'Đã dọn dẹp giỏ hàng!');
 });
 
-// 5. THANH TOÁN
-Route::get('/thanh-toan', [GioHangController::class, 'thanhToan'])->name('cart.checkout');
-Route::post('/xu-ly-thanh-toan', [GioHangController::class, 'xuLyThanhToan'])->name('cart.process');
-
-// 6. LỌC THEO THỂ LOẠI
-Route::get('/the-loai/{slug}', [GioHangController::class, 'theLoai'])->name('category.show');
-
 
 // ==========================================
-// PHẦN 2: TÍNH NĂNG ĐĂNG NHẬP (CỦA BẠN BẠN VIẾT)
+// PHẦN 2: KHU VỰC BẮT BUỘC ĐĂNG NHẬP (AUTH)
 // ==========================================
-Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-Route::post('/register', [AuthController::class, 'register']);
-
-Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-
-// ==========================================
-// PHẦN 3: BREEZE ĐỂ DỰ PHÒNG (NẾU CẦN)
-// ==========================================
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
 Route::middleware('auth')->group(function () {
+    
+    /**
+     * TRANG DASHBOARD CHUNG (Tách riêng khỏi nhóm admin)
+     * Tên đầy đủ hệ thống nhận diện: 'dashboard' -> Sửa triệt để lỗi RouteNotFoundException
+     */
+    Route::get('/dashboard', function() {
+        return view('dashboard'); // Trả về view dashboard mặc định của Breeze
+    })->name('dashboard');
+
+    // 1. DÀNH CHO KHÁCH HÀNG (Hoặc người dùng đã đăng nhập chung)
+    Route::get('/thanh-toan', [GioHangController::class, 'thanhToan'])->name('cart.checkout');
+    Route::post('/xu-ly-thanh-toan', [GioHangController::class, 'xuLyThanhToan'])->name('cart.process');
+    
+    // Cập nhật Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-// Route lọc truyện theo thể loại
-Route::get('/the-loai/{id}', [App\Http\Controllers\GioHangController::class, 'theLoai'])->name('category.show');
+
+    // 2. DÀNH CHO QUẢN LÝ (ADMIN)
+    Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
+        // Trang tổng quan nội bộ riêng của Admin (Tên: admin.overview)
+        Route::get('/overview', function() {
+            return "Đây là trang quản trị của Admin";
+        })->name('overview');
+        
+        // Quản lý truyện
+        Route::get('/truyen',           [TruyenAdminController::class, 'index'])->name('truyen.index');
+        Route::get('/truyen/them',      [TruyenAdminController::class, 'create'])->name('truyen.create');
+        Route::post('/truyen',          [TruyenAdminController::class, 'store'])->name('truyen.store');
+        Route::get('/truyen/{id}/sua',  [TruyenAdminController::class, 'edit'])->name('truyen.edit');
+        Route::put('/truyen/{id}',      [TruyenAdminController::class, 'update'])->name('truyen.update');
+        Route::delete('/truyen/{id}',   [TruyenAdminController::class, 'destroy'])->name('truyen.destroy');
+    }); 
+
+    // 3. DÀNH CHO NHÂN VIÊN (STAFF)
+    Route::middleware('role:staff')->prefix('staff')->name('staff.')->group(function () {
+        Route::get('/don-hang', function() {
+            return "Đây là trang duyệt đơn hàng cho Nhân viên";
+        })->name('orders');
+    });
+
+    // 4. DÀNH CHO SHIPPER
+    Route::middleware('role:shipper')->prefix('shipper')->name('shipper.')->group(function () {
+        Route::get('/giao-hang', function() {
+            return "Đây là trang nhận đơn đi giao của Shipper";
+        })->name('deliveries');
+    });
+
+}); // Kết thúc nhóm Route::middleware('auth')
+
+
+// File auth.php của Laravel Breeze 
+require __DIR__.'/auth.php';

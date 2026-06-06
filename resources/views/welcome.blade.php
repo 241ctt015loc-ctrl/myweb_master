@@ -24,60 +24,71 @@
             </div>
 
             <ul class="nav-links">
-    <li><a href="{{ route('home') }}" class="nav-btn btn-home"><i class="fas fa-home"></i> Trang Chủ</a></li>
-    <li><button onclick="openFilter()" class="nav-btn btn-cate"><i class="fas fa-filter"></i> Thể Loại</button></li>
-    
-    @auth
-        <li><span style="color: white;">Chào, {{ Auth::user()->name }}</span></li>
-        <li>
-            <form action="{{ route('logout') }}" method="POST" style="display:inline;">
-                @csrf
-                <button type="submit" class="nav-btn" style="background:none; border:none; color:white; cursor:pointer;">Đăng xuất</button>
-            </form>
-        </li>
-    @else
-        <li><a href="{{ route('login') }}" class="nav-btn"><i class="fas fa-user"></i> Đăng nhập</a></li>
-        <li><a href="{{ route('register') }}" class="nav-btn"><i class="fas fa-user-plus"></i> Đăng ký</a></li>
-    @endauth
+                {{-- Nút lối tắt vào Admin - Chỉ hiển thị khi đã đăng nhập --}}
+                @auth
+                    <li>
+                        <a href="{{ route('admin.truyen.index') }}" class="nav-btn btn-admin">
+                            <i class="fas fa-user-shield"></i> Quản lý truyện
+                        </a>
+                    </li>
+                @endauth
 
-    <li>
-        <a href="{{ route('cart.index') }}" class="cart-icon">
-            <i class="fas fa-shopping-cart"></i>
-            @if(session('gio_hang'))
-                <span class="badge">{{ count(session('gio_hang')) }}</span>
-            @endif
-        </a>
-    </li>
-</ul>
+                <li><a href="{{ route('home') }}" class="nav-btn btn-home"><i class="fas fa-home"></i> Trang Chủ</a></li>
+                <li><button onclick="openFilter()" class="nav-btn btn-cate"><i class="fas fa-filter"></i> Thể Loại</button></li>
+                
+                @auth
+                    <li class="user-greeting"><span>Chào, {{ Auth::user()->name }}</span></li>
+                    <li>
+                        <form action="{{ route('logout') }}" method="POST" class="logout-form">
+                            @csrf
+                            <button type="submit" class="nav-btn btn-logout">
+                                <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                            </button>
+                        </form>
+                    </li>
+                @else
+                    <li><a href="{{ route('login') }}" class="nav-btn btn-login"><i class="fas fa-user"></i> Đăng nhập</a></li>
+                    <li><a href="{{ route('register') }}" class="nav-btn btn-register"><i class="fas fa-user-plus"></i> Đăng ký</a></li>
+                @endauth
+
+                <li>
+                    <a href="{{ route('cart.index') }}" class="cart-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                        @if(session('gio_hang'))
+                            <span class="badge">{{ count(session('gio_hang')) }}</span>
+                        @endif
+                    </a>
+                </li>
+            </ul>
         </nav>
     </header>
-<div id="filterModal" class="filter-modal">
-    <div class="filter-content">
-        <h3 class="modal-title"><i class="fas fa-tags"></i> Chọn Thể Loại</h3>
-        
-        <form action="{{ route('search') }}" method="GET">
-            <div class="filter-grid">
-                @if(isset($categories) && $categories->count() > 0)
-                    @foreach($categories as $cat)
-                        <label class="filter-item">
-                            <input type="checkbox" name="genres[]" value="{{ $cat->id }}" 
-                                {{ is_array(request('genres')) && in_array($cat->id, request('genres')) ? 'checked' : '' }}> 
-                           <span>{{ $cat->name }}</span>
-                        </label>
-                    @endforeach
-                @else
-                    <p>Chưa có thể loại nào trong database.</p>
-                @endif
-            </div>
 
-            <div class="filter-footer">
-                <button type="button" class="btn-close-filter" onclick="closeFilter()">Đóng</button>
-                <button type="submit" class="btn-submit-filter">Lọc Truyện</button>
-            </div>
-        </form>
+    <div id="filterModal" class="filter-modal">
+        <div class="filter-content">
+            <h3 class="modal-title"><i class="fas fa-tags"></i> Chọn Thể Loại</h3>
+            
+            <form action="{{ route('search') }}" method="GET">
+                <div class="filter-grid">
+                    @if(isset($categories) && $categories->count() > 0)
+                        @foreach($categories as $cat)
+                            <label class="filter-item">
+                                <input type="checkbox" name="genres[]" value="{{ $cat->id }}" 
+                                    {{ is_array(request('genres')) && in_array($cat->id, request('genres')) ? 'checked' : '' }}> 
+                                <span>{{ $cat->name }}</span>
+                            </label>
+                        @endforeach
+                    @else
+                        <p>Chưa có thể loại nào trong database.</p>
+                    @endif
+                </div>
+
+                <div class="filter-footer">
+                    <button type="button" class="btn-close-filter" onclick="closeFilter()">Đóng</button>
+                    <button type="submit" class="btn-submit-filter">Lọc Truyện</button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
-
 
     <section class="hero-banner">
         <div class="banner-overlay"></div> 
@@ -99,14 +110,13 @@
                     <a href="{{ route('story.show', $story->id) }}" style="text-decoration: none; color: inherit; display: block; flex-grow: 1;">
                         <div class="card-img">
                             <span class="tag-new">HOT</span>
-                            <img src="{{ asset('images/' . $story->HinhAnh) }}" alt="{{ $story->TenTruyen }}">
+                            <img src="{{ asset('images/' . $story->cover_image) }}" alt="{{ $story->title }}">
                         </div>
 
                         <div class="card-info">
-                            <h2>{{ $story->TenTruyen }}</h2>
+                            <h2>{{ $story->title }}</h2>
                             <div>
-                                {{-- Đã sửa $item thành $story để lấy đúng giá từ database --}}
-                                <span class="price">{{ number_format($story->GiaBan, 0, ',', '.') }}đ</span>
+                                <span class="price">{{ number_format($story->price, 0, ',', '.') }}đ</span>
                             </div>
                         </div>
                     </a>
@@ -141,11 +151,11 @@
     <script>
         Swal.fire({
             title: '🎉 Chúc mừng!',
-            text: '{{ session('order_success') }}',
+            text: '{{ session("order_success") }}',
             icon: 'success',
             confirmButtonText: 'Tuyệt vời',
             confirmButtonColor: '#ff4757',
-            backdrop: `rgba(0,0,123,0.4) url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJndnBqZ3BqZ3BqZ3BqZ3BqZ3BqZ3BqZ3BqZ3BqZ3BqZ3BqZ3BqJmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/l0MYt5jPR6QX5pnqM/giphy.gif") left top no-repeat`
+            backdrop: `rgba(0,0,123,0.4) url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJndnBqZ3BqZ3BqZ3BqZ3BqZ3BqZ3BqZ3BqZ3BqZ3BqZ3BqZ3BqJmVwPXYxX2ludGVybmFsX2dpZl9ieV9i_byVpZCZjdD1n/l0MYt5jPR6QX5pnqM/giphy.gif") left top no-repeat`
         })
     </script>
     @endif

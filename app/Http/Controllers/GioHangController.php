@@ -7,7 +7,7 @@ use App\Models\Truyen;
 
 class GioHangController extends Controller
 {
-/**
+    /**
      * 1. Hàm hiển thị TRANG CHỦ
      */
     public function index(Request $request)
@@ -16,7 +16,7 @@ class GioHangController extends Controller
         $storiesQuery = \App\Models\Truyen::query();
 
         if ($query) {
-            $storiesQuery->where('TenTruyen', 'LIKE', "%{$query}%");
+            $storiesQuery->where('title', 'LIKE', "%{$query}%"); // Đã sửa TenTruyen -> title
         }
 
         $stories = $storiesQuery->get();
@@ -26,6 +26,7 @@ class GioHangController extends Controller
 
         return view('welcome', compact('stories', 'categories'));
     }
+
     /**
      * 2. Hàm xử lý khi nhấn nút "Thêm vào giỏ"
      */
@@ -44,10 +45,10 @@ class GioHangController extends Controller
             $gioHang[$id]['so_luong'] += $soLuongMua;
         } else {
             $gioHang[$id] = [
-                "ten_truyen" => $truyen->TenTruyen, 
+                "ten_truyen" => $truyen->title,       // Đã sửa TenTruyen -> title
                 "so_luong"   => $soLuongMua,
-                "gia_ban"    => $truyen->GiaBan,   
-                "hinh_anh"   => $truyen->HinhAnh   
+                "gia_ban"    => $truyen->price,       // Đã sửa GiaBan -> price
+                "hinh_anh"   => $truyen->cover_image  // Đã sửa HinhAnh -> cover_image
             ];
         }
 
@@ -57,31 +58,31 @@ class GioHangController extends Controller
                          ->with('added_to_cart', 'Đã thêm vào giỏ hàng thành công!');
     }
 
-/**
+    /**
      * 3. Hàm xử lý TÌM KIẾM VÀ LỌC (Cho route /search)
      */
     public function search(Request $request)
-{
-    $genres = $request->input('genres'); // Nhận danh sách ID thể loại [1]
-    $queryText = $request->input('query');
-    
-    $query = \App\Models\Truyen::query();
+    {
+        $genres = $request->input('genres'); 
+        $queryText = $request->input('query');
+        
+        $query = \App\Models\Truyen::query();
 
-    // Lọc theo cột category_id bạn vừa thêm vào Database
-    if (!empty($genres)) {
-        $query->whereIn('category_id', $genres);
+        if (!empty($genres)) {
+            $query->whereIn('category_id', $genres);
+        }
+
+        if (!empty($queryText)) {
+            $query->where('title', 'LIKE', "%{$queryText}%"); // Đã sửa TenTruyen -> title
+        }
+
+        $stories = $query->get();
+        $categories = \DB::table('categories')->get();
+
+        return view('welcome', compact('stories', 'categories'));
     }
 
-    if (!empty($queryText)) {
-        $query->where('TenTruyen', 'LIKE', "%{$queryText}%");
-    }
-
-    $stories = $query->get();
-    $categories = \DB::table('categories')->get();
-
-    return view('welcome', compact('stories', 'categories'));
-}
- /**
+    /**
      * 4. Hàm hiển thị trang GIỎ HÀNG
      */
     public function xemGioHang()
@@ -96,13 +97,11 @@ class GioHangController extends Controller
     {
         $gioHang = session()->get('gio_hang', []);
 
-        // Nếu tồn tại truyện này trong giỏ thì tiến hành xóa
         if(isset($gioHang[$id])) {
-            unset($gioHang[$id]); // Xóa phần tử khỏi mảng
-            session()->put('gio_hang', $gioHang); // Cập nhật lại session
+            unset($gioHang[$id]); 
+            session()->put('gio_hang', $gioHang); 
         }
 
-        // Quay lại trang giỏ hàng và báo thành công
         return redirect()->back()->with('removed_from_cart', 'Đã xóa truyện khỏi giỏ hàng!');
     }
 
@@ -128,7 +127,6 @@ class GioHangController extends Controller
         $hoTen = $request->input('ho_ten');
         session()->forget('gio_hang'); 
 
-        // Đổi thành order_success cho khớp với đoạn script SweetAlert ở trang welcome
         return redirect('/')->with('order_success', 'Cảm ơn ' . $hoTen . '! Đơn hàng đã được ghi nhận.');
     }
 
@@ -144,16 +142,13 @@ class GioHangController extends Controller
     /**
      * 8. Lọc theo thể loại
      */
-   public function theLoai($id)
-{
-    // 1. Lấy ra thể loại đang chọn
-    $category = \DB::table('categories')->where('id', $id)->first();
+    public function theLoai($id)
+    {
+        $category = \DB::table('categories')->where('id', $id)->first();
 
-    // 2. Lấy danh sách truyện thuộc thể loại đó
-    // Lưu ý: Tên cột 'MaTheLoai' phải khớp với DB của bạn nhé
-    $stories = \App\Models\Truyen::where('MaTheLoai', $id)->get();
+        // Đã sửa MaTheLoai -> category_id
+        $stories = \App\Models\Truyen::where('category_id', $id)->get(); 
 
-    // 3. Trả về lại trang chủ nhưng chỉ có truyện của thể loại này
-    return view('welcome', compact('stories', 'category'));
-}
+        return view('welcome', compact('stories', 'category'));
+    }
 }
