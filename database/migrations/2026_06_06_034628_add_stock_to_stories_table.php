@@ -6,9 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Chạy lệnh cập nhật database (Khi gõ php artisan migrate)
-     */
+   
     public function up(): void
     {
         Schema::table('stories', function (Blueprint $table) {
@@ -18,9 +16,7 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Chạy lệnh hoàn tác hạ cấp database (Khi gõ php artisan migrate:rollback)
-     */
+   
     public function down(): void
     {
         Schema::table('stories', function (Blueprint $table) {

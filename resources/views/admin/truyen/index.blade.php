@@ -14,7 +14,7 @@
 
     <div class="admin-container mt-4 px-4">
         
-        {{-- Tiêu đề trang --}}
+  
         <div class="page-header d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
             <div class="d-flex align-items-center gap-3">
                 <h3 class="fw-bold m-0 text-dark">
@@ -29,7 +29,6 @@
             </a>
         </div>
 
-        {{-- Thông báo thành công --}}
         @if(session('success'))
             <div class="alert alert-success alert-dismissible fade show shadow-sm mb-4 border-0" role="alert" style="border-left: 4px solid #10b981 !important; background: white;">
                 <span class="text-success fw-medium"><i class="fa-solid fa-circle-check me-2"></i>{{ session('success') }}</span>
@@ -37,7 +36,6 @@
             </div>
         @endif
 
-        {{-- Bảng dữ liệu chính --}}
         <div class="card main-card shadow-sm border-0 bg-white rounded-3">
             <div class="card-header bg-light border-bottom py-3">
                 <h5 class="m-0 fw-bold text-secondary"><i class="fa-solid fa-list me-2"></i>Danh sách truyện trong hệ thống</h5>

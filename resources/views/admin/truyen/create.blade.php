@@ -110,7 +110,7 @@
 
     </div>
 
-    {{-- Bộ Script bắt sự kiện thay đổi file để tạo Preview ảnh --}}
+
     <script>
         document.getElementById('cover_image_input').addEventListener('change', function(event) {
             const file = event.target.files[0];

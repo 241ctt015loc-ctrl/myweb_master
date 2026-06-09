@@ -13,7 +13,7 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
 
-                    {{-- HIỂN THỊ MENU ADMIN TRÊN MÁY TÍNH --}}
+                    
                     @if(Auth::user() && Auth::user()->role === 'admin')
                         <x-nav-link :href="route('admin.truyen.index')" :active="request()->routeIs('admin.truyen.*')">
                             📚 {{ __('Quản lý Truyện') }}

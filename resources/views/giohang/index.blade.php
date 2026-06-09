@@ -58,30 +58,28 @@
                         <th>Giá</th>
                         <th>Số lượng</th>
                         <th>Thành tiền</th>
-                        <th class="text-center">Hành động</th> </tr>
+                        <th class="text-center">Hành động</th>
+                    </tr>
                 </thead>
                 <tbody>
                     @php $total = 0; @endphp
                     
-                    {{-- Kiểm tra xem có hàng trong Session không --}}
                     @if(session('gio_hang') && count(session('gio_hang')) > 0)
                         @foreach(session('gio_hang') as $id => $details)
-                            {{-- Ép kiểu giá bán thành số trước khi tính toán để PHP không bị lú --}}
                             @php $total += (float)$details['gia_ban'] * $details['so_luong']; @endphp
                             
                             <tr>
-                                <td><img src="{{ asset('images/' . $details['hinh_anh']) }}" class="img-cart"></td>
+                                {{-- ĐÃ ĐỒNG BỘ: Đổi sang thư mục images/ để hiển thị ảnh chính xác --}}
+                                <td><img src="{{ asset('images/' . $details['hinh_anh']) }}" class="img-cart" alt="Bìa truyện"></td>
                                 <td class="align-middle"><strong>{{ $details['ten_truyen'] }}</strong></td>
                                 
-                                {{-- Ép kiểu hiển thị giá --}}
                                 <td class="align-middle">{{ number_format((float)$details['gia_ban'], 0, ',', '.') }} đ</td>
-                                
                                 <td class="align-middle">{{ $details['so_luong'] }}</td>
                                 
-                                {{-- Ép kiểu hiển thị Thành tiền --}}
-                                <td class="align-middle text-danger font-weight-bold">{{ number_format((float)$details['gia_ban'] * $details['so_luong'], 0, ',', '.') }} đ</td>
+                                <td class="align-middle text-danger font-weight-bold">
+                                    {{ number_format((float)$details['gia_ban'] * $details['so_luong'], 0, ',', '.') }} đ
+                                </td>
                                 
-                                {{-- Nút xóa --}}
                                 <td class="align-middle text-center">
                                     <a href="{{ route('cart.remove', $id) }}" class="btn btn-sm btn-danger" style="border-radius: 5px;">
                                         <i class="fas fa-trash"></i> Xóa
@@ -100,14 +98,12 @@
                 </tbody>
             </table>
 
-            {{-- Phần tổng tiền và các nút điều hướng được gom lại cho gọn --}}
             <div class="d-flex justify-content-between align-items-end mt-4 pt-3 border-top">
                 <a href="{{ url('/') }}" class="btn-back">⬅ Tiếp tục chọn truyện</a>
                 
                 <div class="text-right">
                     <h4 class="mb-3">Tổng thanh toán: <span class="total-price">{{ number_format($total, 0, ',', '.') }} VNĐ</span></h4>
                     
-                    {{-- Nút Thanh Toán đã được gắn route sang trang checkout --}}
                     @if(session('gio_hang') && count(session('gio_hang')) > 0)
                         <a href="{{ route('cart.checkout') }}" class="btn-checkout">Thanh toán ngay ➡</a>
                     @endif
@@ -116,40 +112,37 @@
 
         </div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-@if(session('added_to_cart'))
-<script>
-    const Toast = Swal.mixin({
-      toast: true,
-      position: 'top-end',
-      showConfirmButton: false,
-      timer: 3000,
-      timerProgressBar: true,
-    })
+    @if(session('added_to_cart'))
+    <script>
+        Swal.mixin({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+        }).fire({
+          icon: 'success',
+          title: '{{ session("added_to_cart") }}'
+        })
+    </script>
+    @endif
 
-    Toast.fire({
-      icon: 'success',
-      title: '{{ session('added_to_cart') }}'
-    })
-</script>
-@endif
-
-@if(session('removed_from_cart'))
-<script>
-    const ToastRemove = Swal.mixin({
-      toast: true,
-      position: 'top-end',
-      showConfirmButton: false,
-      timer: 3000,
-      timerProgressBar: true,
-    })
-
-    ToastRemove.fire({
-      icon: 'warning',
-      title: '{{ session('removed_from_cart') }}'
-    })
-</script>
-@endif
+    @if(session('removed_from_cart'))
+    <script>
+        Swal.mixin({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+        }).fire({
+          icon: 'warning',
+          title: '{{ session("removed_from_cart") }}'
+        })
+    </script>
+    @endif
 </body>
 </html>

@@ -10,20 +10,19 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
 
     <style>
-        /* Ép toàn bộ giao diện về nền sáng, chữ tối */
+       
         html, body {
             background-color: #f3f4f6 !important;
             color: #1f2937 !important;
             font-family: system-ui, -apple-system, sans-serif;
         }
 
-        /* Khung chứa bảng dữ liệu ép thành màu trắng */
+       
         .bg-white, table, .card, main {
             background-color: #ffffff !important;
             color: #1f2937 !important;
         }
 
-        /* Giả lập lại các class khoảng cách mà file View đang gọi */
         .py-12 { padding-top: 3rem; padding-bottom: 3rem; }
         .max-w-7xl { max-width: 1280px; margin: 0 auto; }
         .max-w-3xl { max-width: 768px; margin: 0 auto; }
@@ -31,14 +30,13 @@
         .mb-6 { margin-bottom: 2rem; }
         .p-4 { padding: 1.5rem; }
         .p-6 { padding: 2rem; }
-        
-        /* Cấu hình lưới 2 cột cho Price & Stock trong form create/edit */
+      
         .grid { display: grid; gap: 1.5rem; }
         @media (min-width: 768px) {
             .md\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         }
 
-        /* Định dạng lại bảng danh sách truyện cho đẹp và gọn */
+        
         table {
             width: 100%;
             border-collapse: collapse;
@@ -58,7 +56,7 @@
             vertical-align: middle;
         }
 
-        /* Sửa lại thanh Menu Navigation của Breeze khi bị mất Tailwind */
+        
         nav {
             background-color: #ffffff !important;
             border-bottom: 1px solid #e5e7eb;
@@ -83,10 +81,10 @@
 </head>
 <body>
 
-    {{-- Thanh menu --}}
+    
     @include('layouts.navigation')
 
-    {{-- Tiêu đề trang --}}
+    
     @isset($header)
         <header class="bg-white border-bottom py-4 shadow-sm mb-4">
             <div class="max-w-7xl mx-auto px-3">
@@ -95,7 +93,7 @@
         </header>
     @endisset
 
-    {{-- Nội dung hiển thị --}}
+    
     <main class="container-fluid">
         {{ $slot }}
     </main>

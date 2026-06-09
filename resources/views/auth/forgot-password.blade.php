@@ -6,7 +6,7 @@
     <title>Quên mật khẩu - Đệ Nhất Truyện</title>
     <link rel="stylesheet" href="{{ asset('css/auth.css') }}?v={{ time() }}">
     <style>
-        /* Thêm một chút style riêng cho đoạn mô tả hướng dẫn */
+       
         .description {
             color: #aaa;
             font-size: 14px;
@@ -14,7 +14,7 @@
             margin-bottom: 20px;
             text-align: left;
         }
-        /* Style cho thông báo gửi email thành công từ hệ thống */
+      
         .status-success {
             background-color: rgba(40, 167, 69, 0.1);
             border-left: 4px solid #28a745;

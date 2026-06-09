@@ -6,7 +6,6 @@
     <title>Xác nhận mật khẩu - Đệ Nhất Truyện</title>
     <link rel="stylesheet" href="{{ asset('css/auth.css') }}?v={{ time() }}">
     <style>
-        /* Style riêng cho đoạn mô tả cảnh báo bảo mật */
         .secure-text {
             color: #aaa;
             font-size: 14px;

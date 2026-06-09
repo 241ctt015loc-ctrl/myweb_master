@@ -13,7 +13,7 @@ class TruyenSeeder extends Seeder
     public function run(): void
 {
     \App\Models\Truyen::create([
-        'MaTheLoai' => 1, // Nhớ đảm bảo ID thể loại này đã tồn tại
+        'MaTheLoai' => 1, 
         'TenTruyen' => 'Đảo Hải Tặc (One Piece)',
         'GiaBan' => 25000,
         'SoLuongTon' => 50,
