@@ -1,27 +1,46 @@
-<x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600">
-        {{ __('This is a secure area of the application. Please confirm your password before continuing.') }}
-    </div>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xác nhận mật khẩu - Đệ Nhất Truyện</title>
+    <link rel="stylesheet" href="{{ asset('css/auth.css') }}?v={{ time() }}">
+    <style>
+        /* Style riêng cho đoạn mô tả cảnh báo bảo mật */
+        .secure-text {
+            color: #aaa;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            text-align: left;
+            border-left: 3px solid #ff2d20;
+            padding-left: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-box">
+    <h2>XÁC NHẬN MẬT KHẨU</h2>
+
+    <p class="secure-text">
+        Đây là khu vực bảo mật tối cao của hệ thống. Vui lòng nhập lại mật khẩu của bạn để xác minh danh tính trước khi tiếp tục.
+    </p>
 
     <form method="POST" action="{{ route('password.confirm') }}">
         @csrf
 
-        <!-- Password -->
-        <div>
-            <x-input-label for="password" :value="__('Password')" />
+        <input type="password" name="password" required autocomplete="current-password" autofocus placeholder="Nhập mật khẩu của bạn">
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
+        @if ($errors->any())
+            <div class="error">
+                {{ $errors->first() }}
+            </div>
+        @endif
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <div class="flex justify-end mt-4">
-            <x-primary-button>
-                {{ __('Confirm') }}
-            </x-primary-button>
-        </div>
+        <button type="submit">Xác nhận</button>
     </form>
-</x-guest-layout>
+</div>
+
+</body>
+</html>

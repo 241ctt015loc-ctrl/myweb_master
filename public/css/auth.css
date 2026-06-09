@@ -1,0 +1,140 @@
+/* public/css/auth.css */
+
+/* Cấu hình nền toàn trang */
+body {
+    background: radial-gradient(circle at center, #1a1a1a 0%, #0d0d0d 100%);
+    color: #ffffff;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Hộp bọc form (Login Box / Register Box) */
+.login-box {
+    background: rgba(30, 30, 30, 0.75);
+    backdrop-filter: blur(10px); /* Hiệu ứng kính mờ thời thượng */
+    padding: 40px 30px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 45, 32, 0.15); /* Viền đỏ mờ nhẹ */
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 25px rgba(255, 45, 32, 0.05);
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7), 0 0 35px rgba(255, 45, 32, 0.1);
+}
+
+/* Tiêu đề ĐĂNG NHẬP / ĐĂNG KÝ */
+h2 {
+    color: #ff2d20;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    text-shadow: 0 0 10px rgba(255, 45, 32, 0.3);
+}
+
+/* Khung bọc các ô nhập liệu để tạo khoảng cách */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+/* Các ô Input */
+input {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 8px;
+    border: 1px solid #333333;
+    background: #242424;
+    color: #ffffff;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+input:focus {
+    outline: none;
+    border-color: #ff2d20;
+    background: #2a2a2a;
+    box-shadow: 0 0 8px rgba(255, 45, 32, 0.25);
+}
+
+/* Nút bấm Submit */
+button {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #ff2d20 0%, #b31a10 100%);
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 45, 32, 0.3);
+    margin-top: 5px;
+}
+
+button:hover {
+    background: linear-gradient(135deg, #ff4136 0%, #e0261d 100%);
+    box-shadow: 0 6px 20px rgba(255, 45, 32, 0.5);
+    transform: scale(1.02);
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+/* Vùng hiển thị thông báo lỗi */
+.error {
+    background-color: rgba(255, 77, 77, 0.1);
+    border-left: 4px solid #ff4d4d;
+    color: #ff4d4d;
+    font-size: 14px;
+    padding: 12px;
+    border-radius: 6px;
+    text-align: left;
+    margin-bottom: 5px;
+    list-style: none;
+}
+
+.error li {
+    margin-bottom: 4px;
+}
+
+.error li:last-child {
+    margin-bottom: 0;
+}
+
+/* Chữ gợi ý chuyển đổi giữa Đăng ký / Đăng nhập */
+.switch-text {
+    margin-top: 25px;
+    font-size: 14px;
+    color: #aaa;
+}
+
+.switch-text a {
+    color: #ff2d20;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.2s;
+    margin-left: 5px;
+}
+
+.switch-text a:hover {
+    color: #ff5247;
+    text-decoration: underline;
+}

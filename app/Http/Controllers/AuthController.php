@@ -4,14 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User; // Thêm dòng này để làm việc với bảng users
-use Illuminate\Support\Facades\Hash; // Thêm dòng này để mã hóa mật khẩu
+use App\Models\User; // Làm việc với bảng users
+use Illuminate\Support\Facades\Hash; // Mã hóa mật khẩu
 
 class AuthController extends Controller
 {
-    // --- PHẦN ĐĂNG NHẬP (Giữ nguyên của bạn) ---
+    // --- PHẦN ĐĂNG NHẬP ---
     public function showLogin() {
-        return view('login');
+        // Sửa ở đây: Trỏ vào đúng thư mục resources/views/auth/login.blade.php
+        return view('auth.login');
     }
 
     public function login(Request $request) {
@@ -28,9 +29,10 @@ class AuthController extends Controller
         return back()->withErrors(['email' => 'Email hoặc mật khẩu không đúng.']);
     }
 
-    // --- PHẦN ĐĂNG KÝ (Thêm mới) ---
+    // --- PHẦN ĐĂNG KÝ ---
     public function showRegister() {
-        return view('register'); // Trả về file register.blade.php
+        // Sửa ở đây: Trỏ vào đúng thư mục resources/views/auth/register.blade.php
+        return view('auth.register'); 
     }
 
     public function register(Request $request) {
@@ -38,7 +40,7 @@ class AuthController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed', // 'confirmed' yêu cầu có ô password_confirmation
+            'password' => 'required|string|min:6|confirmed', // yêu cầu ô password_confirmation
         ], [
             'email.unique' => 'Email này đã được sử dụng.',
             'password.confirmed' => 'Mật khẩu nhập lại không khớp.',
@@ -59,7 +61,7 @@ class AuthController extends Controller
         return redirect('/')->with('success', 'Đăng ký tài khoản thành công!');
     }
 
-    // --- PHẦN ĐĂNG XUẤT (Giữ nguyên của bạn) ---
+    // --- PHẦN ĐĂNG XUẤT ---
     public function logout(Request $request) {
         Auth::logout();
         $request->session()->invalidate();

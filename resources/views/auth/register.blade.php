@@ -1,52 +1,42 @@
-<x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
-        @csrf
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký - Đệ Nhất Truyện</title>
+    <link rel="stylesheet" href="{{ asset('css/auth.css') }}">
+</head>
+<body>
 
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
-        </div>
+<div class="login-box">
+    <h2>ĐĂNG KÝ</h2>
 
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+    <form action="{{ route('register') }}" method="POST">
+        @csrf 
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+        <input type="text" name="name" value="{{ old('name') }}" required placeholder="Họ và tên của bạn">
+        
+        <input type="email" name="email" value="{{ old('email') }}" required placeholder="Địa chỉ Email">
+        
+        <input type="password" name="password" required placeholder="Mật khẩu (ít nhất 6 ký tự)">
+        
+        <input type="password" name="password_confirmation" required placeholder="Nhập lại mật khẩu">
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
+        @if ($errors->any())
+            <div class="error">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </div>
+        @endif
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
-
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
-        </div>
+        <button type="submit">Đăng Ký Ngay</button>
     </form>
-</x-guest-layout>
+    
+    <p class="switch-text">
+        Đã có tài khoản? <a href="{{ route('login') }}">Đăng nhập</a>
+    </p>
+</div>
+
+</body>
+</html>

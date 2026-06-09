@@ -24,13 +24,14 @@
             </div>
 
             <ul class="nav-links">
-                {{-- Nút lối tắt vào Admin - Chỉ hiển thị khi đã đăng nhập --}}
-                @auth
-                    <li>
-                        <a href="{{ route('admin.truyen.index') }}" class="nav-btn btn-admin">
-                            <i class="fas fa-user-shield"></i> Quản lý truyện
-                        </a>
-                    </li>
+               @auth
+                    @if(Auth::user()->role === 'admin')
+                        <li>
+                            <a href="{{ route('admin.truyen.index') }}" class="nav-btn btn-admin">
+                                <i class="fas fa-user-shield"></i> Quản lý truyện
+                            </a>
+                        </li>
+                     @endif
                 @endauth
 
                 <li><a href="{{ route('home') }}" class="nav-btn btn-home"><i class="fas fa-home"></i> Trang Chủ</a></li>

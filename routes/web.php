@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GioHangController; 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TruyenAdminController;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,32 +29,39 @@ Route::get('/reset-gio-hang', function() {
     return redirect()->route('home')->with('swal_success', 'Đã dọn dẹp giỏ hàng!');
 });
 
+// CÁC TRANG GIAO DIỆN VÀ XỬ LÝ ĐĂNG KÝ / ĐĂNG NHẬP (Sử dụng AuthController của bạn)
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
+
+Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+Route::post('/register', [AuthController::class, 'register']);
+
 
 // ==========================================
 // PHẦN 2: KHU VỰC BẮT BUỘC ĐĂNG NHẬP (AUTH)
 // ==========================================
 Route::middleware('auth')->group(function () {
     
-    /**
-     * TRANG DASHBOARD CHUNG (Tách riêng khỏi nhóm admin)
-     * Tên đầy đủ hệ thống nhận diện: 'dashboard' -> Sửa triệt để lỗi RouteNotFoundException
-     */
+    // Nếu Breeze tự động đá về /dashboard, lệnh này sẽ đẩy user ngược về trang chủ ngay lập tức
     Route::get('/dashboard', function() {
-        return view('dashboard'); // Trả về view dashboard mặc định của Breeze
+        return redirect('/'); 
     })->name('dashboard');
 
-    // 1. DÀNH CHO KHÁCH HÀNG (Hoặc người dùng đã đăng nhập chung)
+    // Thanh toán đơn hàng
     Route::get('/thanh-toan', [GioHangController::class, 'thanhToan'])->name('cart.checkout');
     Route::post('/xu-ly-thanh-toan', [GioHangController::class, 'xuLyThanhToan'])->name('cart.process');
     
-    // Cập nhật Profile
+    // Quản lý thông tin cá nhân
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // 2. DÀNH CHO QUẢN LÝ (ADMIN)
+    // Trang xử lý Đăng xuất
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+    // KHU VỰC DÀNH RIÊNG CHO ADMIN (Kiểm tra quyền role:admin)
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
-        // Trang tổng quan nội bộ riêng của Admin (Tên: admin.overview)
+        // Trang tổng quan nội bộ riêng của Admin
         Route::get('/overview', function() {
             return "Đây là trang quản trị của Admin";
         })->name('overview');
@@ -67,22 +75,4 @@ Route::middleware('auth')->group(function () {
         Route::delete('/truyen/{id}',   [TruyenAdminController::class, 'destroy'])->name('truyen.destroy');
     }); 
 
-    // 3. DÀNH CHO NHÂN VIÊN (STAFF)
-    Route::middleware('role:staff')->prefix('staff')->name('staff.')->group(function () {
-        Route::get('/don-hang', function() {
-            return "Đây là trang duyệt đơn hàng cho Nhân viên";
-        })->name('orders');
-    });
-
-    // 4. DÀNH CHO SHIPPER
-    Route::middleware('role:shipper')->prefix('shipper')->name('shipper.')->group(function () {
-        Route::get('/giao-hang', function() {
-            return "Đây là trang nhận đơn đi giao của Shipper";
-        })->name('deliveries');
-    });
-
-}); // Kết thúc nhóm Route::middleware('auth')
-
-
-// File auth.php của Laravel Breeze 
-require __DIR__.'/auth.php';
+}); // Đóng ngoặc chuẩn xác cho nhóm Route::middleware('auth')
