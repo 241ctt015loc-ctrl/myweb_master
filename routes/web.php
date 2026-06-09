@@ -6,11 +6,6 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TruyenAdminController;
 use App\Http\Controllers\AuthController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-*/
 
 // ==========================================
 // PHẦN 1: TÍNH NĂNG CHÍNH (AI CŨNG XEM ĐƯỢC)
@@ -75,4 +70,4 @@ Route::middleware('auth')->group(function () {
         Route::delete('/truyen/{id}',   [TruyenAdminController::class, 'destroy'])->name('truyen.destroy');
     }); 
 
-}); // Đóng ngoặc chuẩn xác cho nhóm Route::middleware('auth')
+}); 

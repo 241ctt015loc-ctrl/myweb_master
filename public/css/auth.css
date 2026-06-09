@@ -1,6 +1,4 @@
-/* public/css/auth.css */
 
-/* Cấu hình nền toàn trang */
 body {
     background: radial-gradient(circle at center, #1a1a1a 0%, #0d0d0d 100%);
     color: #ffffff;
@@ -14,10 +12,10 @@ body {
     box-sizing: border-box;
 }
 
-/* Hộp bọc form (Login Box / Register Box) */
+
 .login-box {
     background: rgba(30, 30, 30, 0.75);
-    backdrop-filter: blur(10px); /* Hiệu ứng kính mờ thời thượng */
+    backdrop-filter: blur(10px); 
     padding: 40px 30px;
     border-radius: 16px;
     border: 1px solid rgba(255, 45, 32, 0.15); /* Viền đỏ mờ nhẹ */
@@ -33,7 +31,6 @@ body {
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7), 0 0 35px rgba(255, 45, 32, 0.1);
 }
 
-/* Tiêu đề ĐĂNG NHẬP / ĐĂNG KÝ */
 h2 {
     color: #ff2d20;
     font-size: 28px;
@@ -44,7 +41,6 @@ h2 {
     text-shadow: 0 0 10px rgba(255, 45, 32, 0.3);
 }
 
-/* Khung bọc các ô nhập liệu để tạo khoảng cách */
 form {
     display: flex;
     flex-direction: column;

@@ -3,7 +3,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 class TheLoai extends Model {
-    protected $table = 'categories'; // Link với bảng cũ của bạn
+    protected $table = 'categories'; 
     protected $fillable = ['TenTheLoai'];
 
     public function danhSachTruyen() {

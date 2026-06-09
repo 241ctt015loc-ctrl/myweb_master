@@ -16,20 +16,16 @@ class GioHangController extends Controller
         $storiesQuery = \App\Models\Truyen::query();
 
         if ($query) {
-            $storiesQuery->where('title', 'LIKE', "%{$query}%"); // Đã sửa TenTruyen -> title
+            $storiesQuery->where('title', 'LIKE', "%{$query}%");
         }
 
         $stories = $storiesQuery->get();
         
-        // Lấy danh sách thể loại truyền sang để Modal không bị lỗi trống
         $categories = \DB::table('categories')->get();
 
         return view('welcome', compact('stories', 'categories'));
     }
 
-    /**
-     * 2. Hàm xử lý khi nhấn nút "Thêm vào giỏ"
-     */
     public function themVaoGio(Request $request, $id)
     {
         $truyen = Truyen::find($id);
@@ -45,10 +41,10 @@ class GioHangController extends Controller
             $gioHang[$id]['so_luong'] += $soLuongMua;
         } else {
             $gioHang[$id] = [
-                "ten_truyen" => $truyen->title,       // Đã sửa TenTruyen -> title
+                "ten_truyen" => $truyen->title,      
                 "so_luong"   => $soLuongMua,
-                "gia_ban"    => $truyen->price,       // Đã sửa GiaBan -> price
-                "hinh_anh"   => $truyen->cover_image  // Đã sửa HinhAnh -> cover_image
+                "gia_ban"    => $truyen->price,      
+                "hinh_anh"   => $truyen->cover_image  
             ];
         }
 
@@ -73,7 +69,7 @@ class GioHangController extends Controller
         }
 
         if (!empty($queryText)) {
-            $query->where('title', 'LIKE', "%{$queryText}%"); // Đã sửa TenTruyen -> title
+            $query->where('title', 'LIKE', "%{$queryText}%"); 
         }
 
         $stories = $query->get();
@@ -146,7 +142,7 @@ class GioHangController extends Controller
     {
         $category = \DB::table('categories')->where('id', $id)->first();
 
-        // Đã sửa MaTheLoai -> category_id
+       
         $stories = \App\Models\Truyen::where('category_id', $id)->get(); 
 
         return view('welcome', compact('stories', 'category'));

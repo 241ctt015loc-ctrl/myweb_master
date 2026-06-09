@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 class TruyenAdminController extends Controller
 {
     /**
-     * Trang danh sách truyện cho Admin
+     * Hiển thị danh sách truyện
      */
     public function index()
     {
@@ -28,7 +28,7 @@ class TruyenAdminController extends Controller
     }
 
     /**
-     * Lưu truyện mới vào database (Định dạng viết liền không dấu: kiemlai.webp)
+     * Xử lý lưu truyện mới vào Database
      */
     public function store(Request $request)
     {
@@ -44,21 +44,26 @@ class TruyenAdminController extends Controller
         $data = $request->only(['title', 'category_id', 'price', 'stock', 'summary']);
         $data['slug'] = Str::slug($request->title) . '-' . time();
 
-        // 🛠️ XỬ LÝ UPLOAD ẢNH: Viết liền không dấu + đuôi .webp
         if ($request->hasFile('cover_image')) {
-            $file = $request->file('cover_image');
-            
-            // Xử lý tạo tên file: "Kiếm Lai" -> "kiem-lai" -> "kiemlai.webp"
-            $fileName = Str::replace('-', '', Str::slug($request->title)) . '.webp';
-            
-            // Di chuyển file ảnh vào thư mục public/covers/
-            $file->move(public_path('covers'), $fileName);
-            
-            // 🔥 ĐẨY LÊN SQL: Chỉ lưu đúng tên file viết liền sạch sẽ (Ví dụ: kiemlai.webp)
+            $file = $request->file('cover_image');      
+
+            $fileName = Str::replace('-', '', Str::slug($request->title)) . '-' . time() . '.' . $file->getClientOriginalExtension();
+
+            $file->move(public_path('images'), $fileName);
+
             $data['cover_image'] = $fileName;
         }
 
-        Truyen::create($data);
+        // Tạo bản ghi mới thông qua phương thức save() để tránh lỗi fillable ngầm nếu cache chưa xóa
+        $story = new Truyen();
+        $story->title       = $data['title'];
+        $story->category_id = $data['category_id'];
+        $story->price       = $data['price'];
+        $story->stock       = $data['stock'];
+        $story->summary     = $data['summary'];
+        $story->slug        = $data['slug'];
+        $story->cover_image = $data['cover_image'] ?? null;
+        $story->save();
 
         return redirect()->route('admin.truyen.index')
                          ->with('success', 'Đã thêm truyện thành công!');
@@ -75,7 +80,7 @@ class TruyenAdminController extends Controller
     }
 
     /**
-     * Lưu chỉnh sửa vào database (Cập nhật ảnh viết liền không dấu)
+     * Xử lý cập nhật thông tin truyện
      */
     public function update(Request $request, $id)
     {
@@ -91,44 +96,50 @@ class TruyenAdminController extends Controller
         ]);
 
         $data = $request->only(['title', 'category_id', 'price', 'stock', 'summary']);
+        
+        // Luôn cập nhật lại slug mới đề phòng trường hợp bạn đổi tiêu đề truyện
+        $data['slug'] = Str::slug($request->title) . '-' . time();
 
-        // 🛠️ XỬ LÝ UPLOAD ẢNH CHO FORM CẬP NHẬT
         if ($request->hasFile('cover_image')) {
             $file = $request->file('cover_image');
             
-            // Tạo tên file mới viết liền không dấu
-            $fileName = Str::replace('-', '', Str::slug($request->title)) . '.webp';
+            // Đặt tên file giữ đuôi ảnh gốc và lưu vào thư mục 'images'
+            $fileName = Str::replace('-', '', Str::slug($request->title)) . '-' . time() . '.' . $file->getClientOriginalExtension();
             
-            // Tìm và xóa file ảnh cũ trên ổ đĩa để tránh rác host
-            $oldPath = str_contains($story->cover_image, 'covers/') ? public_path($story->cover_image) : public_path('covers/' . $story->cover_image);
-            if ($story->cover_image && file_exists($oldPath)) {
-                @unlink($oldPath);
+            // Xóa ảnh cũ nằm ở thư mục public/images (nếu tồn tại)
+            if ($story->cover_image) {
+                $oldPath = public_path('images/' . $story->cover_image);
+                if (file_exists($oldPath)) {
+                    @unlink($oldPath);
+                }
             }
             
-            // Di chuyển file ảnh mới vào thư mục public/covers/
-            $file->move(public_path('covers'), $fileName);
+            // Di chuyển file mới vào thư mục public/images
+            $file->move(public_path('images'), $fileName);
             
-            // 🔥 ĐẨY LÊN SQL: Cập nhật tên file dạng viết liền sạch sẽ
             $data['cover_image'] = $fileName;
         }
 
+        // Cập nhật dữ liệu vào bản ghi hiện tại thay vì tạo mới
         $story->update($data);
 
         return redirect()->route('admin.truyen.index')
-                         ->with('success', 'Đã cập nhật truyện thành công!');
+                         ->with('success', 'Đã cập nhật thông tin truyện thành công!');
     }
 
     /**
-     * Xóa truyện và dọn dẹp file ảnh tương ứng
+     * Xử lý xóa truyện khỏi hệ thống
      */
     public function destroy($id)
     {
         $story = Truyen::findOrFail($id);
         
-        // Xác định đường dẫn thực tế để link tới ảnh và xóa file
-        $imagePath = str_contains($story->cover_image, 'covers/') ? public_path($story->cover_image) : public_path('covers/' . $story->cover_image);
-        if ($story->cover_image && file_exists($imagePath)) {
-            @unlink($imagePath);
+        // Xóa file ảnh vật lý nằm trong thư mục public/images trước khi xóa bản ghi
+        if ($story->cover_image) {
+            $imagePath = public_path('images/' . $story->cover_image);
+            if (file_exists($imagePath)) {
+                @unlink($imagePath);
+            }
         }
 
         $story->delete();
