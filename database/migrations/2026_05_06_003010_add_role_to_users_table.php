@@ -9,7 +9,6 @@ return new class extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            // Thêm cột role, mặc định là customer
             $table->string('role')->default('customer')->after('password'); 
         });
     }

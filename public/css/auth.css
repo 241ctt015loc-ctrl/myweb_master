@@ -18,7 +18,7 @@ body {
     backdrop-filter: blur(10px); 
     padding: 40px 30px;
     border-radius: 16px;
-    border: 1px solid rgba(255, 45, 32, 0.15); /* Viền đỏ mờ nhẹ */
+    border: 1px solid rgba(255, 45, 32, 0.15);
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 25px rgba(255, 45, 32, 0.05);
     width: 100%;
     max-width: 420px;

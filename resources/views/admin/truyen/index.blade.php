@@ -58,7 +58,6 @@
                         <tr>
                             <td class="fw-medium text-muted px-4">{{ $loop->iteration }}</td>
                             <td>
-                                {{-- ĐÃ SỬA: Ép cứng kích thước hiển thị ảnh để không bị vỡ giao diện --}}
                                 <div class="cover-wrapper shadow-sm rounded border bg-light d-flex align-items-center justify-content-center" style="width: 55px; height: 75px; overflow: hidden;">
                                     @if($story->cover_image)
                                         <img src="{{ asset('images/' . $story->cover_image) }}" 

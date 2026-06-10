@@ -156,7 +156,6 @@
             icon: 'success',
             confirmButtonText: 'Tuyệt vời',
             confirmButtonColor: '#ff4757',
-            backdrop: `rgba(0,0,123,0.4) url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJndnBqZ3BqZ3BqZ3BqZ3BqZ3BqZ3BqZ3BqZ3BqZ3BqZ3BqZ3BqJmVwPXYxX2ludGVybmFsX2dpZl9ieV9i_byVpZCZjdD1n/l0MYt5jPR6QX5pnqM/giphy.gif") left top no-repeat`
         })
     </script>
     @endif

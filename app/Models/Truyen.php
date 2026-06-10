@@ -19,12 +19,10 @@ class Truyen extends Model
  
     public function getFormattedPriceAttribute() 
     {
-        
         return number_format($this->price, 0, ',', '.') . ' VNĐ';
     }
-
     public function scopeConHang($query) 
     {
-        
+  
     }
 }
