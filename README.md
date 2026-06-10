@@ -26,3 +26,4 @@ Trong quá trình thực hiện dự án, nhóm có sử dụng ChatGPT, Claude 
 * Tự kiểm thử, sửa lỗi và hoàn thiện các chức năng.
 
 link canva : https://canva.link/drrm3efifu252qo
+link githup cũ :https://github.com/241ctt015loc-ctrl/myweb-..git
