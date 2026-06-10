@@ -25,3 +25,4 @@ Trong quá trình thực hiện dự án, nhóm có sử dụng ChatGPT, Claude 
 * Tự xây dự cơ sở dữ liệu trên sql 
 * Tự kiểm thử, sửa lỗi và hoàn thiện các chức năng.
 
+link canva : https://canva.link/drrm3efifu252qo
