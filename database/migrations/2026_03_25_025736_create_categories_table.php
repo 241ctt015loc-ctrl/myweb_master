@@ -12,12 +12,10 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('slug')->unique(); // Để làm đường dẫn đẹp
+            $table->string('slug')->unique(); 
             $table->timestamps();
         });
     }
-
-    
     public function down(): void
     {
         Schema::dropIfExists('categories');

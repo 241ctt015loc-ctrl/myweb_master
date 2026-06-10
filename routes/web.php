@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GioHangController; 
-use App\Http\Controllers\ProfileController;
+
 use App\Http\Controllers\TruyenAdminController;
 use App\Http\Controllers\AuthController;
 
@@ -25,8 +25,6 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
 
-
-
 Route::middleware('auth')->group(function () {
     
     Route::get('/dashboard', function() {
@@ -36,9 +34,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/thanh-toan', [GioHangController::class, 'thanhToan'])->name('cart.checkout');
     Route::post('/xu-ly-thanh-toan', [GioHangController::class, 'xuLyThanhToan'])->name('cart.process');
     
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 

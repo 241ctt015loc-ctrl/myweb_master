@@ -25,11 +25,11 @@ class TruyenAdminController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title'       => 'required|string|max:255',
+            'title' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
-            'price'       => 'required|numeric|min:0',
-            'stock'       => 'required|integer|min:0', 
-            'summary'     => 'nullable|string',
+            'price'   => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:0', 
+            'summary'  => 'nullable|string',
             'cover_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
@@ -48,12 +48,12 @@ class TruyenAdminController extends Controller
 
        
         $story = new Truyen();
-        $story->title       = $data['title'];
+        $story->title = $data['title'];
         $story->category_id = $data['category_id'];
-        $story->price       = $data['price'];
-        $story->stock       = $data['stock'];
-        $story->summary     = $data['summary'];
-        $story->slug        = $data['slug'];
+        $story->price= $data['price'];
+        $story->stock= $data['stock'];
+        $story->summary = $data['summary'];
+        $story->slug = $data['slug'];
         $story->cover_image = $data['cover_image'] ?? null;
         $story->save();
 
@@ -75,11 +75,11 @@ class TruyenAdminController extends Controller
         $story = Truyen::findOrFail($id);
 
         $request->validate([
-            'title'       => 'required|string|max:255',
+            'title' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
-            'price'       => 'required|numeric|min:0',
-            'stock'       => 'required|integer|min:0', 
-            'summary'     => 'nullable|string',
+            'price' => 'required|numeric|min:0',
+            'stock'=> 'required|integer|min:0', 
+            'summary'=> 'nullable|string',
             'cover_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 

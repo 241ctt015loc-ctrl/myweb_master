@@ -12,7 +12,6 @@ class Truyen extends Model
     protected $fillable = ['title', 'price', 'category_id', 'cover_image', 'summary', 'slug', 'stock'];
     function category()
     {
-        
         return $this->belongsTo(Category::class, 'category_id', 'id');
     }
 

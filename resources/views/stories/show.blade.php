@@ -74,7 +74,7 @@
     .story-title {
          font-size: 2.8rem;
          margin: 0;
-        color: #ffffff; /
+        color: #ffffff; 
         text-shadow: 2px 2px 4px rgba(0,0,0,0.5); 
         -webkit-background-clip: initial;
         -webkit-text-fill-color: initial;

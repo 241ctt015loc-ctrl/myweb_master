@@ -45,8 +45,6 @@ class AuthController extends Controller
             'password.confirmed' => 'Mật khẩu nhập lại không khớp.',
             'password.min' => 'Mật khẩu phải có ít nhất 6 ký tự.'
         ]);
-
-        
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,

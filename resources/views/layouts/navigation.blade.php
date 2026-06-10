@@ -70,13 +70,6 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
-
-            {{-- HIỂN THỊ MENU ADMIN TRÊN ĐIỆN THOẠI --}}
-            @if(Auth::user() && Auth::user()->role === 'admin')
-                <x-responsive-nav-link :href="route('admin.truyen.index')" :active="request()->routeIs('admin.truyen.*')">
-                    📚 {{ __('Quản lý Truyện') }}
-                </x-responsive-nav-link>
-            @endif
         </div>
 
         <div class="pt-4 pb-1 border-t border-gray-200">
